@@ -152,7 +152,6 @@ static void display_instruction_notes(void)
     printf("\r\e[22;0m\e[32;1m* \e[33;1mYou can use vimgdb here just like you would use gdb.\e[22;0m\n");
     printf("\r\e[22;0m\e[32;1m* \e[33;1mYou can also use it through a vim server. There is a 'Gdb' menu you can use or keybindings (Which you can lookup using the menu) \e[22;0m\n");
     printf("\r\e[22;0m\e[32;1m* \e[33;1mBy default it will try to connect to a server called GVIM but you can specify another with --server=SERVER (gvim --serverlist should show you any current servers)\e[22;0m\n");
-    printf("\r\e[22;0m\e[32;1m* \e[33;1mThis gdb session will automatically do a code 'list' whenever a stack frame is shown (e.g. after a 'step' or 'next' instruction) It also highlights your current line in green (assuming your terminal supports color. (sorry if it doesn't))\e[22;0m\n");
 
     printf("\n\n\r\e[22;0m\e[36;1m*****\e[37;1m _Known problems_ \e[36;1m*****\e[22;0m\n\n");
     printf("\r\e[22;0m\e[32;1m* \e[33;1mToo many little ones to mention!\e[22;0m\n");
@@ -164,7 +163,7 @@ static void display_instruction_notes(void)
 
     printf("\n\n\r\e[22;0m\e[36;1m*****\e[37;1m _Bugs and Features_ \e[36;1m*****\e[22;0m\n\n");
     printf("\r\e[22;0m\e[32;1m* \e[33;1mI welcome any bug fixing, code cleaning, feature adding or ideas etc. \e[22;0m\n");
-    printf("\r\e[22;0m\e[32;1m* \e[33;1mPlease send patches, flames etc to <rbragg@essex.ac.uk> (Please put vimgdb somewhere in the subject.)\e[22;0m\n");
+    printf("\r\e[22;0m\e[32;1m* \e[33;1mPlease send patches, flames etc to <rb at sixbynine.org> (Please put vimgdb somewhere in the subject.)\e[22;0m\n");
 
     printf("\r\n\nPress any key to continue...");
     getc(stdin);
