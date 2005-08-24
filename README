@@ -1,0 +1,7 @@
+copy vimgdb.vim to .vim/plugins/
+
+start gvim
+
+run vimgdb in a terminal as you would gdb
+
+
