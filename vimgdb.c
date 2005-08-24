@@ -305,7 +305,6 @@ static void filter_gdbout(void)
     regex_t source_dirs_reg;
     char line_reg_tmp[10];
     static int last_line=-1;
-    static int color_enabled=1;
     
     regmatch_t sub_expr[5];
 
@@ -322,7 +321,7 @@ static void filter_gdbout(void)
             printf("Expression failed to compile!");
     if(regcomp(&clear_reg,"Deleted breakpoint ([0-9]+)",REG_EXTENDED)!=0)
             printf("Expression failed to compile!");
-    if(regcomp(&source_dirs_reg,"Source directories searched (.*$cdir:$cwd)",REG_EXTENDED)!=0)
+    if(regcomp(&source_dirs_reg,"Source directories searched: (.*\\$cdir:\\$cwd)",REG_EXTENDED)!=-1)
             printf("Expression failed to compile!");
 
     for(;read(gdb_pty,&c,1) && buff_ptr<1000;buff_ptr++)
@@ -333,7 +332,6 @@ static void filter_gdbout(void)
             
         }else{
             printf("\e[22;0m");
-            /*color_enabled=1;*/
 
             line_buff[buff_ptr]='\0';
             buff_ptr=-1;
@@ -371,69 +369,28 @@ static void filter_gdbout(void)
                 strncat(vim_command,SUB_EXPR(2));/* line */
                 strcat(vim_command,")<CR>");
                 send_to_vim(START_COMMAND, vim_command, END_COMMAND, NULL);
-                
+
                 line_reg_tmp[0]='\0';
                 strncat(line_reg_tmp,SUB_EXPR(2));
                 last_line=atoi(line_reg_tmp);
-                
-                send_to_gdb("list ");
-                sprintf(line_reg_tmp,"%d",last_line-10);
-                send_to_gdb(line_reg_tmp);
-                send_to_gdb(",");
-                sprintf(line_reg_tmp,"%d",last_line+10);
-                send_to_gdb(line_reg_tmp);
-                send_to_gdb("\n");
 
-                /* look at help :edit  (++opt,cmd) */
-                /*printf("\n__%s__",vim_command);*/
             }else if(regexec(&line_reg,line_buff,3,sub_expr,0)==0)
             {   /* detect current position line */
                 printf("\e[1;44m");
                 fflush(stdout);
-                color_enabled=0;
             }else if(regexec(&source_dirs_reg,line_buff,3,sub_expr,0)==0)
             {
-                printf("")
+                /* FIXME vim needs to be informed of the new search paths */
             }
         }
 
-        /* Sorry if this offends you :) */
-/*
-        if(color_enabled)
-        {
-            switch(c)
-            {                
-                case '(': case ')': case ',':
-                    printf("\e[1;33m%c\e[22;0m",c);
-                    break;
-                    
-                case '\\': case '/': case '*':
-                    printf("\e[1;32m%c\e[22;0m",c);
-                    break;
-                case '0': case '1': case '2': case '3': case '4': case '5':
-                case '6': case '7': case '8': case '9':
-                    printf("\e[1;37m%c\e[22;0m",c);
-                    break;
-                case '{': case '}':
-                    printf("\e[1;31m%c\e[22;0m",c);
-                    break;
-                case '"': case '#':
-                    printf("\e[1;36m%c\e[22;0m",c);
-                    break;
-                
-                default:
-                  putchar(c);  
-            }
-        }else
-        */
-            putchar(c);
+        putchar(c);
 
         fflush(stdout);
     }
 
     printf("filter_gdbout\n");
     fflush(stderr);
-
 }
 
 static void filter_vimout(void)
